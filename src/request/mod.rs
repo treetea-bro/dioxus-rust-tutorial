@@ -1,4 +1,4 @@
-// Define the Hackernews API
+use super::structs::*;
 use futures::future::join_all;
 
 pub static BASE_API_URL: &str = "https://hacker-news.firebaseio.com/v0/";
@@ -18,6 +18,7 @@ pub async fn get_stories(count: usize) -> Result<Vec<StoryItem>, reqwest::Error>
     let story_futures = stories_ids[..usize::min(stories_ids.len(), count)]
         .iter()
         .map(|&story_id| get_story_preview(story_id));
+
     let stories = join_all(story_futures)
         .await
         .into_iter()
